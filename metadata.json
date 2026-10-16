@@ -1,6 +1,6 @@
 {
-  "name": "Bacondev123 — GitHub.io Engineering Portal & Technical Documentation",
-  "description": "Professional software engineering portfolio, system architecture documentation, and public repository index for neew1152.github.io/my-portal.",
+  "name": "bacondev123 — Systems, Luau Game Architecture & Embedded Robotics",
+  "description": "9th-grade developer in Thailand building server-authoritative turn-based game systems in Luau (Rojo toolchain), embedded robotics routines in C++ (POP32 / ATX2), and Python Manim visualizations for bacondev123.github.io.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

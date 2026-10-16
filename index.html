@@ -1,21 +1,688 @@
 <!doctype html>
 <html lang="en" class="dark scroll-smooth">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>bacondev123 — Systems, Luau Game Architecture & Embedded Robotics</title>
-    <meta name="description" content="9th-grade developer in Thailand building server-authoritative turn-based game systems in Luau (Rojo toolchain), embedded C++ robotics routines (POP32 / ATX2), and Python Manim visualizations." />
-    <meta property="og:title" content="bacondev123 — Systems, Luau Game Architecture & Embedded Robotics" />
-    <meta property="og:description" content="9th-grade developer in Thailand building server-authoritative turn-based game systems in Luau (Rojo toolchain), embedded C++ robotics routines (POP32 / ATX2), and Python Manim visualizations." />
-    <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;1,400&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
-  </head>
-  <body class="bg-[#090a10] text-slate-100 antialiased selection:bg-violet-500 selection:text-white">
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bacondev123 — Systems, Luau Game Architecture &amp; Embedded Robotics</title>
+  <meta name="description" content="9th-grade developer in Thailand building server-authoritative turn-based game systems in Luau (Rojo toolchain), embedded robotics routines in C++ (POP32 / ATX2), and Python Manim visualizations." />
+  <meta property="og:title" content="bacondev123 — Systems, Luau Game Architecture &amp; Embedded Robotics" />
+  <meta property="og:description" content="Engineering Game Systems, Embedded Logic &amp; Visual Mathematics." />
+  <meta property="og:type" content="website" />
 
+  <!-- Google Fonts: Syne (Display), Plus Jakarta Sans (Body), JetBrains Mono (Code) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Syne', 'sans-serif'],
+            sans: ['Plus Jakarta Sans', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            canvas: '#090a10',
+            surface: '#0b0c16',
+            panel: '#07080d',
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Lucide Icons via CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      background-color: #090a10;
+      color: #f1f5f9;
+      letter-spacing: 0.01em;
+    }
+    h1, h2, h3 {
+      text-wrap: balance;
+    }
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+  </style>
+</head>
+<body class="bg-canvas text-slate-100 font-sans antialiased selection:bg-violet-500 selection:text-white min-h-screen flex flex-col">
+
+  <!-- 1. HEADER / NAVIGATION (Strict 3-Zone Contract) -->
+  <header class="sticky top-0 z-40 bg-[#090a10]/85 backdrop-blur-md border-b border-purple-900/40">
+    <div class="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between gap-4">
+      <!-- Zone 1: Brand Wordmark -->
+      <a href="#top" class="font-display text-lg font-bold tracking-tight text-slate-100 hover:text-purple-400 transition-colors whitespace-nowrap shrink-0">
+        bacondev123.github.io
+      </a>
+
+      <!-- Zone 2: Navigation Links -->
+      <nav aria-label="Primary Navigation" class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-400">
+        <a href="#projects" class="hover:text-purple-400 hover:underline underline-offset-4 transition-colors whitespace-nowrap">Projects</a>
+        <a href="#robotics" class="hover:text-purple-400 hover:underline underline-offset-4 transition-colors whitespace-nowrap">Robotics</a>
+        <a href="#visualizations" class="hover:text-purple-400 hover:underline underline-offset-4 transition-colors whitespace-nowrap">Visualizations</a>
+        <a href="https://github.com/bacondev123" target="_blank" rel="noopener noreferrer" class="hover:text-purple-400 hover:underline underline-offset-4 transition-colors whitespace-nowrap">GitHub</a>
+      </nav>
+
+      <!-- Zone 3: Primary Action -->
+      <div class="flex items-center gap-3 shrink-0">
+        <a
+          href="https://github.com/bacondev123"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-violet-600 hover:bg-violet-500 shadow-lg shadow-purple-500/10 rounded-lg transition-colors whitespace-nowrap"
+        >
+          <span>@bacondev123</span>
+          <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top" class="flex-1">
+    <!-- 2. HERO SECTION -->
+    <section class="max-w-[1200px] mx-auto px-6 pt-14 pb-20 md:pt-20 md:pb-24 border-b border-purple-900/40">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <!-- Left Column -->
+        <div class="lg:col-span-7 space-y-6">
+          <div class="flex flex-wrap items-center gap-2 text-xs font-mono text-slate-400">
+            <span class="text-purple-400 font-semibold">bacondev123</span>
+            <span aria-hidden="true">•</span>
+            <span>9th-Grade Systems &amp; Game Developer</span>
+            <span aria-hidden="true">•</span>
+            <span>Thailand</span>
+          </div>
+
+          <h1 class="font-display text-3xl sm:text-4xl lg:text-[42px] font-extrabold tracking-tight text-slate-50 leading-[1.12] max-w-2xl">
+            Engineering Game Systems, Embedded Logic &amp; Visual Mathematics.
+          </h1>
+
+          <p class="text-base text-slate-300 leading-relaxed max-w-[64ch]">
+            9th-grade developer building server-authoritative turn-based game systems in Luau (Rojo toolchain) and tuning embedded control routines for robotics.
+          </p>
+
+          <!-- Quick Stack Metadata -->
+          <div class="pt-1 flex flex-wrap items-center gap-2.5 text-xs font-mono text-indigo-400">
+            <span>Luau / Rojo</span>
+            <span aria-hidden="true" class="text-slate-600">•</span>
+            <span>C++ / POP32</span>
+            <span aria-hidden="true" class="text-slate-600">•</span>
+            <span>Python / Manim</span>
+            <span aria-hidden="true" class="text-slate-600">•</span>
+            <span>Git CLI</span>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex flex-wrap items-center gap-3.5 pt-2">
+            <a
+              href="https://github.com/bacondev123"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-violet-600 hover:bg-violet-500 shadow-lg shadow-purple-500/10 rounded-lg transition-colors whitespace-nowrap"
+            >
+              <span>View Repositories</span>
+              <i data-lucide="external-link" class="w-4 h-4"></i>
+            </a>
+            <a
+              href="#projects"
+              class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-slate-100 bg-purple-950/20 hover:bg-purple-950/40 border border-purple-900/40 hover:border-purple-500/60 rounded-lg transition-colors whitespace-nowrap"
+            >
+              <span>Explore Architecture</span>
+              <i data-lucide="arrow-down-right" class="w-4 h-4 text-purple-400"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right Column: Terminal Session Overview -->
+        <div class="lg:col-span-5">
+          <div class="rounded-2xl border border-purple-900/40 hover:border-purple-500/60 bg-surface/90 backdrop-blur-md shadow-lg shadow-purple-500/10 overflow-hidden transition-colors">
+            <div class="px-4 py-3 border-b border-purple-900/40 flex items-center justify-between text-xs font-mono text-slate-400">
+              <span>rojo-sync · aftman.toml · git-cli</span>
+              <span class="text-purple-400 tabular-nums">127.0.0.1:34872</span>
+            </div>
+            <div class="p-5 font-mono text-xs space-y-2.5 text-slate-300 leading-relaxed">
+              <p class="text-slate-400">$ aftman trust &amp;&amp; rojo serve default.project.json</p>
+              <p class="text-purple-400">Rojo server listening on port 34872 (The Rising Miracle)</p>
+              <p class="text-slate-400 pt-2">$ git status --short</p>
+              <p class="text-indigo-400">M src/ServerScriptService/CombatEngine/TurnAuthority.server.luau</p>
+              <p class="text-indigo-400">M robotics/pop32_pd_line_tracker/pop32_pd_line_tracker.ino</p>
+              <p class="text-violet-400">M scenes/shadow_projection_3d.py</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. FEATURED WORK (3 Core Showcase Cards) -->
+    <section id="projects" class="max-w-[1200px] mx-auto px-6 py-16 md:py-20 space-y-12">
+      <div>
+        <p class="text-xs font-mono text-purple-400 mb-2">
+          Core Engineering Showcase · Luau · Embedded C++ · Python Manim
+        </p>
+        <h2 class="font-display text-2xl sm:text-3xl font-bold tracking-tight text-slate-50">
+          01. Featured Systems &amp; Architecture
+        </h2>
+      </div>
+
+      <!-- CARD 1: Game Dev — The Rising Miracle -->
+      <article class="rounded-2xl border border-purple-900/40 hover:border-purple-500/60 bg-surface/90 backdrop-blur-md shadow-lg shadow-purple-500/10 overflow-hidden transition-colors">
+        <div class="grid grid-cols-1 lg:grid-cols-12">
+          <!-- Left Details & Real 16:9 OBS Video Container -->
+          <div class="lg:col-span-6 p-6 sm:p-8 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-purple-900/40">
+            <div class="space-y-4">
+              <div class="flex flex-wrap items-center gap-2 text-xs font-mono text-purple-400">
+                <span>Luau</span>
+                <span aria-hidden="true" class="text-slate-600">·</span>
+                <span>Rojo</span>
+                <span aria-hidden="true" class="text-slate-600">·</span>
+                <span>Aftman</span>
+                <span aria-hidden="true" class="text-slate-600">·</span>
+                <span>VS Code</span>
+                <span aria-hidden="true" class="text-slate-600">·</span>
+                <span>Git CLI</span>
+              </div>
+
+              <h3 class="font-display text-xl sm:text-2xl font-bold text-slate-50">
+                The Rising Miracle — Server-Authoritative Turn-Based Combat
+              </h3>
+
+              <p class="text-sm text-slate-300 leading-relaxed">
+                Production codebase featuring modular state management, server-authoritative validation to prevent exploiters, and clean networking replication architecture.
+              </p>
+
+              <!-- Real 16:9 OBS Gameplay Video Container -->
+              <div class="relative w-full aspect-video rounded-xl overflow-hidden border border-purple-900/40 bg-purple-950/20">
+                <video autoplay loop muted playsinline class="relative z-10 w-full h-full object-cover">
+                  <source src="assets/combat_demo.mp4" type="video/mp4">
+                </video>
+                <!-- Fallback subtle overlay text: "OBS Combat Gameplay Demo" -->
+                <div class="absolute inset-0 flex flex-col items-center justify-center p-4 text-center pointer-events-none">
+                  <i data-lucide="film" class="w-5 h-5 text-purple-400/70 mb-2"></i>
+                  <span class="text-xs font-mono text-purple-300/80">OBS Combat Gameplay Demo</span>
+                  <span class="text-[11px] font-mono text-slate-500 mt-1">assets/combat_demo.mp4</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-6 mt-6 border-t border-purple-900/40 flex items-center justify-between text-xs text-slate-400">
+              <span>Strict Luau Typechecking (--!strict) · Zero Client Trust</span>
+              <a
+                href="https://github.com/bacondev123"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-purple-400 font-semibold hover:underline inline-flex items-center gap-1 whitespace-nowrap"
+              >
+                <span>GitHub Profile</span>
+                <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Right Column: Rojo File Structure & Server Validator Code Mockup -->
+          <div class="lg:col-span-6 p-6 sm:p-8 bg-[#090a10]/60 flex flex-col justify-between">
+            <div>
+              <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+                <div class="flex items-center gap-1 p-1 bg-surface border border-purple-900/40 rounded-lg">
+                  <button
+                    id="tab-btn-rojo"
+                    type="button"
+                    onclick="switchGameTab('rojo')"
+                    class="px-3 py-1.5 text-xs font-semibold rounded-md transition-colors whitespace-nowrap cursor-pointer bg-violet-600 text-white"
+                  >
+                    Rojo File Structure
+                  </button>
+                  <button
+                    id="tab-btn-luau"
+                    type="button"
+                    onclick="switchGameTab('luau')"
+                    class="px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap cursor-pointer text-slate-400 hover:text-slate-200"
+                  >
+                    ActionValidator.luau
+                  </button>
+                </div>
+
+                <button
+                  type="button"
+                  onclick="copyActiveGameSnippet()"
+                  id="copy-game-btn"
+                  class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-300 bg-purple-950/30 hover:bg-purple-950/50 border border-purple-900/40 rounded-lg transition-colors whitespace-nowrap cursor-pointer"
+                >
+                  <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                  <span id="copy-game-text">Copy Snippet</span>
+                </button>
+              </div>
+
+              <pre id="code-rojo" class="rounded-xl border border-purple-900/40 bg-panel p-4 text-xs font-mono text-slate-200 overflow-x-auto leading-relaxed"><code>the-rising-miracle/
+├── default.project.json       # Rojo build &amp; sync manifest
+├── aftman.toml                # Toolchain pinning (rojo, selene, stylua)
+├── src/
+│   ├── ServerScriptService/
+│   │   ├── CombatEngine/
+│   │   │   ├── TurnAuthority.server.luau
+│   │   │   ├── ActionValidator.luau
+│   │   │   └── StateReplicator.luau
+│   ├── ReplicatedStorage/
+│   │   ├── Shared/
+│   │   │   ├── CombatTypes.luau
+│   │   │   └── NetworkPackets.luau
+│   └── StarterPlayerScripts/
+│       └── CombatClientController.client.luau</code></pre>
+
+              <pre id="code-luau" class="hidden rounded-xl border border-purple-900/40 bg-panel p-4 text-xs font-mono text-slate-200 overflow-x-auto leading-relaxed"><code>--!strict
+-- Server-Authoritative Turn Action Validator (The Rising Miracle)
+local CombatTypes = require(game.ReplicatedStorage.Shared.CombatTypes)
+
+local ActionValidator = {}
+
+function ActionValidator.validateTurnIntent(
+    matchState: CombatTypes.MatchState,
+    playerUserId: number,
+    payload: CombatTypes.ActionPayload
+): (boolean, string?)
+    if matchState.activeTurnOwner ~= playerUserId then
+        return false, "TurnOwnershipMismatch"
+    end
+    if os.clock() - matchState.turnStartedAt &gt; matchState.turnDurationLimit then
+        return false, "TurnWindowExpired"
+    end
+    local actor = matchState.combatants[playerUserId]
+    if not actor or actor.stamina &lt; payload.requiredStamina then
+        return false, "InsufficientResourcePool"
+    end
+    return true, nil
+end
+
+return ActionValidator</code></pre>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-purple-900/40 grid grid-cols-2 gap-4 text-xs">
+              <div>
+                <p class="text-slate-400">Toolchain</p>
+                <p class="font-mono text-slate-200 mt-0.5">Rojo 7 · Aftman · VS Code · Git CLI</p>
+              </div>
+              <div>
+                <p class="text-slate-400">Replication Pattern</p>
+                <p class="font-mono text-purple-400 mt-0.5">Server State Machine → Delta Packets</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- CARD 2 & CARD 3 Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- CARD 2: Robotics & Hardware -->
+        <article id="robotics" class="rounded-2xl border border-purple-900/40 hover:border-purple-500/60 bg-surface/90 backdrop-blur-md shadow-lg shadow-purple-500/10 p-6 sm:p-8 flex flex-col justify-between transition-colors">
+          <div class="space-y-4">
+            <div class="flex flex-wrap items-center gap-2 text-xs font-mono text-indigo-400">
+              <span>C++</span>
+              <span aria-hidden="true" class="text-slate-600">·</span>
+              <span>Arduino</span>
+              <span aria-hidden="true" class="text-slate-600">·</span>
+              <span>POP32 (ESP32)</span>
+              <span aria-hidden="true" class="text-slate-600">·</span>
+              <span>ATX2</span>
+              <span aria-hidden="true" class="text-slate-600">·</span>
+              <span>PD Controller</span>
+            </div>
+
+            <h3 class="font-display text-xl sm:text-2xl font-bold text-slate-50">
+              Autonomous Robotics Control &amp; Sensor Routines
+            </h3>
+
+            <p class="text-sm text-slate-300 leading-relaxed">
+              Hardware routines for school robotics club tasks. Includes practical PD control loops for line tracking, analog sensor threshold tuning, and hardware actuation.
+            </p>
+
+            <!-- Real Hardware Media Embed Container -->
+            <div class="relative w-full aspect-video rounded-xl overflow-hidden border border-purple-900/40 bg-purple-950/20">
+              <video autoplay loop muted playsinline poster="assets/robotics_hardware.jpg" class="relative z-10 w-full h-full object-cover">
+                <source src="assets/robotics_demo.mp4" type="video/mp4">
+              </video>
+              <!-- Fallback subtle overlay text -->
+              <div class="absolute inset-0 flex flex-col items-center justify-center p-4 text-center pointer-events-none">
+                <i data-lucide="cpu" class="w-5 h-5 text-indigo-400/70 mb-2"></i>
+                <span class="text-xs font-mono text-purple-300/80">POP32 / ATX2 Hardware &amp; Line-Tracking Capture</span>
+                <span class="text-[11px] font-mono text-slate-500 mt-1">assets/robotics_demo.mp4 · assets/robotics_hardware.jpg</span>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between pt-1">
+              <span class="text-xs font-mono text-slate-400">robotics/pop32_pd_line_tracker.ino</span>
+              <button
+                type="button"
+                onclick="copyRoboticsSnippet()"
+                class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-slate-300 bg-purple-950/30 hover:bg-purple-950/50 border border-purple-900/40 rounded-md transition-colors cursor-pointer whitespace-nowrap"
+              >
+                <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                <span id="copy-robotics-text">Copy Routine</span>
+              </button>
+            </div>
+
+            <pre id="code-robotics" class="rounded-xl border border-purple-900/40 bg-panel p-4 text-xs font-mono text-slate-200 overflow-x-auto max-h-56 leading-relaxed"><code>// POP32 (ESP32) Line-Tracking PD Control Loop
+#include &lt;POP32.h&gt;
+
+float Kp = 18.5f, Kd = 42.0f, prevError = 0.0f;
+int baseSpeed = 55;
+
+void trackLinePD(float error) {
+    float derivative = error - prevError;
+    float correction = (Kp * error) + (Kd * derivative);
+    prevError = error;
+
+    int leftMotor  = constrain((int)(baseSpeed + correction), -100, 100);
+    int rightMotor = constrain((int)(baseSpeed - correction), -100, 100);
+    motor(1, leftMotor);
+    motor(2, rightMotor);
+}</code></pre>
+          </div>
+
+          <div class="pt-5 mt-6 border-t border-purple-900/40 flex items-center justify-between text-xs">
+            <span class="font-mono text-slate-400">Analog Threshold Calibration · PD Loop</span>
+            <a
+              href="https://github.com/bacondev123/robotics"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-indigo-400 font-semibold hover:underline inline-flex items-center gap-1 whitespace-nowrap"
+            >
+              <span>github.com/bacondev123/robotics</span>
+              <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>
+        </article>
+
+        <!-- CARD 3: Mathematics — Mathematical Animations & Geometry Visuals -->
+        <article id="visualizations" class="rounded-2xl border border-purple-900/40 hover:border-purple-500/60 bg-surface/90 backdrop-blur-md shadow-lg shadow-purple-500/10 p-6 sm:p-8 flex flex-col justify-between transition-colors">
+          <div class="space-y-4">
+            <div class="flex flex-wrap items-center gap-2 text-xs font-mono text-purple-400">
+              <span>Python</span>
+              <span aria-hidden="true" class="text-slate-600">·</span>
+              <span>Manim Community Edition</span>
+            </div>
+
+            <h3 class="font-display text-xl sm:text-2xl font-bold text-slate-50">
+              Mathematical Animations &amp; Geometry Visuals
+            </h3>
+
+            <p class="text-sm text-slate-300 leading-relaxed">
+              Programmatic mathematical visualizations rendering geometry and shadow projection algorithms using Python.
+            </p>
+
+            <!-- Real Manim MP4 Media Embed Container -->
+            <div class="relative w-full aspect-video rounded-xl overflow-hidden border border-purple-900/40 bg-purple-950/20">
+              <video autoplay loop muted playsinline class="relative z-10 w-full h-full object-cover">
+                <source src="assets/manim_render.mp4" type="video/mp4">
+              </video>
+              <!-- Fallback subtle overlay text -->
+              <div class="absolute inset-0 flex flex-col items-center justify-center p-4 text-center pointer-events-none">
+                <i data-lucide="film" class="w-5 h-5 text-purple-400/70 mb-2"></i>
+                <span class="text-xs font-mono text-purple-300/80">Manim Community Edition Video Render</span>
+                <span class="text-[11px] font-mono text-slate-500 mt-1">assets/manim_render.mp4</span>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between pt-1">
+              <span class="text-xs font-mono text-slate-400">scenes/shadow_projection_3d.py</span>
+              <button
+                type="button"
+                onclick="copyManimSnippet()"
+                class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-slate-300 bg-purple-950/30 hover:bg-purple-950/50 border border-purple-900/40 rounded-md transition-colors cursor-pointer whitespace-nowrap"
+              >
+                <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                <span id="copy-manim-text">Copy Script</span>
+              </button>
+            </div>
+
+            <pre id="code-manim" class="rounded-xl border border-purple-900/40 bg-panel p-4 text-xs font-mono text-slate-200 overflow-x-auto max-h-56 leading-relaxed"><code>from manim import *
+import numpy as np
+
+class ShadowProjectionScene(ThreeDScene):
+    def construct(self):
+        axes = ThreeDAxes()
+        light_source = np.array([0.0, 0.0, 3.6])
+        mesh = Icosahedron(edge_length=1.2).shift(OUT * 1.6)
+
+        def project_to_z0(pt: np.ndarray) -&gt; np.ndarray:
+            ray = pt - light_source
+            t = -light_source[2] / ray[2]
+            return light_source + t * ray
+
+        shadow = mesh.copy().apply_function(project_to_z0)
+        self.play(Create(axes), FadeIn(mesh))
+        self.play(TransformFromCopy(mesh, shadow))</code></pre>
+          </div>
+
+          <div class="pt-5 mt-6 border-t border-purple-900/40 flex items-center justify-between text-xs">
+            <span class="font-mono text-slate-400">Vector Geometry · Shadow Projection</span>
+            <a
+              href="https://github.com/bacondev123/MathAnimations"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-purple-400 font-semibold hover:underline inline-flex items-center gap-1 whitespace-nowrap"
+            >
+              <span>github.com/bacondev123/MathAnimations</span>
+              <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 4. GITHUB REPOSITORIES / ACTIVITY -->
+    <section class="border-t border-purple-900/40 bg-[#0b0c16]/70 py-16 md:py-20">
+      <div class="max-w-[1200px] mx-auto px-6 space-y-10">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div>
+            <p class="text-xs font-mono text-indigo-400 mb-2">
+              Public Source Repositories · github.com/bacondev123
+            </p>
+            <h2 class="font-display text-2xl sm:text-3xl font-bold tracking-tight text-slate-50">
+              02. GitHub Repositories &amp; Activity
+            </h2>
+          </div>
+
+          <a
+            href="https://github.com/bacondev123"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-slate-100 bg-purple-950/25 hover:bg-purple-950/45 border border-purple-900/40 hover:border-purple-500/60 rounded-lg transition-colors whitespace-nowrap self-start"
+          >
+            <i data-lucide="git-branch" class="w-3.5 h-3.5 text-purple-400"></i>
+            <span>Open github.com/bacondev123</span>
+            <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+          </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Repository 1: robotics -->
+          <a
+            href="https://github.com/bacondev123/robotics"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group rounded-2xl border border-purple-900/40 bg-surface/90 backdrop-blur-md p-6 flex flex-col justify-between hover:border-purple-500/60 shadow-lg shadow-purple-500/10 transition-colors"
+          >
+            <div>
+              <div class="flex items-center justify-between text-xs font-mono text-slate-400 mb-2">
+                <span>C++ · Arduino · POP32 · ATX2</span>
+                <span class="text-indigo-400">Public Repository</span>
+              </div>
+              <h3 class="font-display text-xl font-bold text-slate-50 group-hover:text-purple-400 transition-colors inline-flex items-center gap-2">
+                <span>robotics</span>
+                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+              </h3>
+              <p class="text-sm text-slate-300 mt-2 leading-relaxed">
+                C++ hardware scratchpad &amp; PD routines for autonomous line tracking, analog IR sensor calibration, and motor control on POP32 (ESP32) and ATX2 boards.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-purple-900/40 flex items-center justify-between text-xs font-mono text-slate-400">
+              <span>github.com/bacondev123/robotics</span>
+              <span class="text-purple-300 group-hover:underline">View Source →</span>
+            </div>
+          </a>
+
+          <!-- Repository 2: MathAnimations -->
+          <a
+            href="https://github.com/bacondev123/MathAnimations"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group rounded-2xl border border-purple-900/40 bg-surface/90 backdrop-blur-md p-6 flex flex-col justify-between hover:border-purple-500/60 shadow-lg shadow-purple-500/10 transition-colors"
+          >
+            <div>
+              <div class="flex items-center justify-between text-xs font-mono text-slate-400 mb-2">
+                <span>Python · Manim Community Edition</span>
+                <span class="text-purple-400">Public Repository</span>
+              </div>
+              <h3 class="font-display text-xl font-bold text-slate-50 group-hover:text-purple-400 transition-colors inline-flex items-center gap-2">
+                <span>MathAnimations</span>
+                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+              </h3>
+              <p class="text-sm text-slate-300 mt-2 leading-relaxed">
+                Python Manim scripts &amp; video renders exploring geometric transformations, vector math, and 3D shadow projection algorithms.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-purple-900/40 flex items-center justify-between text-xs font-mono text-slate-400">
+              <span>github.com/bacondev123/MathAnimations</span>
+              <span class="text-purple-300 group-hover:underline">View Source →</span>
+            </div>
+          </a>
+        </div>
+
+        <!-- Callout Box: Active Daily Git Commitment & Terminal-Driven Workflow -->
+        <div class="rounded-2xl border border-purple-900/40 hover:border-purple-500/60 bg-canvas p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-lg shadow-purple-500/10 transition-colors">
+          <div class="space-y-1.5">
+            <div class="flex items-center gap-2 text-xs font-mono text-purple-400">
+              <i data-lucide="terminal" class="w-4 h-4"></i>
+              <span>Active Daily Git Commitment &amp; Terminal-Driven Workflow</span>
+            </div>
+            <p class="font-display text-base sm:text-lg font-bold text-slate-100">
+              Git CLI · Rojo Sync · Aftman Toolchain · VS Code
+            </p>
+            <p class="text-xs sm:text-sm text-slate-400 max-w-2xl">
+              Every Luau combat module, POP32 C++ control loop, and Manim animation script is developed in an external IDE workflow and committed directly through the Git CLI.
+            </p>
+          </div>
+
+          <a
+            href="https://github.com/bacondev123"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 px-4 py-2.5 text-xs font-semibold text-white bg-violet-600 hover:bg-violet-500 shadow-lg shadow-purple-500/10 rounded-lg transition-colors whitespace-nowrap shrink-0"
+          >
+            <span>Inspect GitHub Activity</span>
+            <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 5. FOOTER -->
+  <footer class="border-t border-purple-900/40 bg-canvas py-10">
+    <div class="max-w-[1200px] mx-auto px-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-slate-400">
+      <div>
+        <p class="font-display text-sm font-bold text-slate-200">
+          bacondev123.github.io
+        </p>
+        <p class="mt-1">
+          Built with raw HTML &amp; Tailwind CSS • Hosted on GitHub Pages
+        </p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-6">
+        <a
+          href="https://github.com/bacondev123"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hover:text-purple-400 hover:underline underline-offset-4 transition-colors"
+        >
+          https://github.com/bacondev123
+        </a>
+        <a
+          href="https://github.com/bacondev123/robotics"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hover:text-indigo-400 hover:underline underline-offset-4 transition-colors"
+        >
+          robotics
+        </a>
+        <a
+          href="https://github.com/bacondev123/MathAnimations"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hover:text-purple-400 hover:underline underline-offset-4 transition-colors"
+        >
+          MathAnimations
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Interactive Scripts -->
+  <script>
+    if (window.lucide) {
+      lucide.createIcons();
+    }
+
+    let currentTab = 'rojo';
+
+    function switchGameTab(tab) {
+      currentTab = tab;
+      const rojoPre = document.getElementById('code-rojo');
+      const luauPre = document.getElementById('code-luau');
+      const rojoBtn = document.getElementById('tab-btn-rojo');
+      const luauBtn = document.getElementById('tab-btn-luau');
+
+      if (tab === 'rojo') {
+        rojoPre.classList.remove('hidden');
+        luauPre.classList.add('hidden');
+        rojoBtn.className = 'px-3 py-1.5 text-xs font-semibold rounded-md transition-colors whitespace-nowrap cursor-pointer bg-violet-600 text-white';
+        luauBtn.className = 'px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap cursor-pointer text-slate-400 hover:text-slate-200';
+      } else {
+        rojoPre.classList.add('hidden');
+        luauPre.classList.remove('hidden');
+        luauBtn.className = 'px-3 py-1.5 text-xs font-semibold rounded-md transition-colors whitespace-nowrap cursor-pointer bg-violet-600 text-white';
+        rojoBtn.className = 'px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap cursor-pointer text-slate-400 hover:text-slate-200';
+      }
+    }
+
+    function copyActiveGameSnippet() {
+      const text = currentTab === 'rojo'
+        ? document.getElementById('code-rojo').innerText
+        : document.getElementById('code-luau').innerText;
+      navigator.clipboard.writeText(text);
+      const btnText = document.getElementById('copy-game-text');
+      btnText.textContent = 'Copied!';
+      setTimeout(() => {
+        btnText.textContent = 'Copy Snippet';
+      }, 1600);
+    }
+
+    function copyRoboticsSnippet() {
+      const text = document.getElementById('code-robotics').innerText;
+      navigator.clipboard.writeText(text);
+      const btnText = document.getElementById('copy-robotics-text');
+      btnText.textContent = 'Copied!';
+      setTimeout(() => {
+        btnText.textContent = 'Copy Routine';
+      }, 1600);
+    }
+
+    function copyManimSnippet() {
+      const text = document.getElementById('code-manim').innerText;
+      navigator.clipboard.writeText(text);
+      const btnText = document.getElementById('copy-manim-text');
+      btnText.textContent = 'Copied!';
+      setTimeout(() => {
+        btnText.textContent = 'Copy Script';
+      }, 1600);
+    }
+  </script>
+</body>
+</html>
